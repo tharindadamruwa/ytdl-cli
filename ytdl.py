@@ -9,8 +9,15 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+def install():
+    try:
+        from pytube import YouTube
+    except:
+        import sys,os
+        os.system("pip install pytube")
+
 def download():
-    from pytube import YouTube
+    
     print(bcolors.WARNING + "[1] Android    [2] Windows   [3] Linux")
     print()
     path = str(input(bcolors.OKGREEN + "Enter Your Platform >> >> >> " + bcolors.ENDC))
