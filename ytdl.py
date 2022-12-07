@@ -8,27 +8,27 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-
-def install():
+    
+def download():
     try:
         from pytube import YouTube
     except:
+        print()
+        print(bcolors.OKGREEN + "Installing package...!")
+        print()
         import sys,os
         os.system("pip install pytube")
-
-def download():
-    
+    import os,sys
     print(bcolors.WARNING + "[1] Android    [2] Windows   [3] Linux")
     print()
     path = str(input(bcolors.OKGREEN + "Enter Your Platform >> >> >> " + bcolors.ENDC))
     print()
     if path == "1":
-        import os
-        import sys
         os.system("termux-setup-storage")
         dlpath = "/sdcard/Download"
     elif path == "2":
-        dlpath = "C:/Downloads"
+        usn = os.getlogin()
+        dlpath = "C:/Users/" + usn + "/Downloads"
     elif path == "3":
         dlpath = "/home/Downloads"
     else:
@@ -39,12 +39,21 @@ def download():
     print()
     print(bcolors.WARNING + "Getting Data...!")
     print()
-    yt = YouTube(link)
+    try:        
+        yt = YouTube(link)
+    except:
+        print(f'Video {link} is unavailable, skipping.')
+        print()
+        link = str(input(bcolors.OKBLUE + "Enter your YouTube video link >> >> >> " + bcolors.OKGREEN))
+        print()
+        print(bcolors.WARNING + "Getting Data...!")
+        print()
+        yt = YouTube(link)
+
     vname = yt.title
     vdescrip = yt.description
     print("Success")
     print()
-    yt = YouTube(link)
     print(bcolors.FAIL + "------------Video Title------------")
     print(bcolors.OKCYAN + vname)
     print()
@@ -59,25 +68,30 @@ def download():
         print("Downloading...!")
         print()
         yt.streams.get_highest_resolution().download(dlpath)
-        print("Succces..! Check " + dlpath)
+        print("Succeed..! Check " + dlpath)
         print(bcolors.ENDC)
     elif chq == '2':
         print("Downloading...!")
         print(bcolors.ENDC)
         yt.streams.get_lowest_resolution().download(dlpath)
-        print("Succces..! Check " + dlpath)
+        print("Succeed..! Check " + dlpath)
         print(bcolors.ENDC)
     elif chq == "3":
         print("Downloading...!")
         print(bcolors.ENDC)
-        yt.streams.get_audio_only().download(dlpath)
-        print("Succces..! Check " + dlpath)
+        out = yt.streams.filter(only_audio=True).first().download(dlpath)
+        base, ext = os.path.splitext(out)
+        new = base + '.mp3'
+        os.rename(out, new)
+        print("Succeed..! Check " + dlpath)
         print(bcolors.ENDC)
     else:
         print("Your input is not valid.. Restart programme" + bcolors.ENDC)
         print()
 
 def menu():
+    import sys,os
+    os.system('cls' if os.name == 'nt' else 'clear')
     print(bcolors.WARNING + "    ")
     print("██╗   ██╗████████╗██████╗ ██╗     ")
     print("╚██╗ ██╔╝╚══██╔══╝██╔══██╗██║     ")
